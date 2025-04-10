@@ -1,7 +1,7 @@
 import env
 from groq import Groq
 
-__all__ = ['GroqApi', ]
+__all__ = ['GroqApiClass', ]
 
 
 client = Groq(
@@ -9,20 +9,25 @@ client = Groq(
 )
 
 class GroqApiClass:
-    def __init__(self, model="llama-3.3-70b-versatile", temprature=1, max_completion_tokens=32768, top_p=1, stop=None):
+    def __init__(self, model="llama-3.3-70b-versatile", temprature=1, max_completion_tokens=8192, top_p=1, stop=None, max_messages=4):
         self.model = model
         self.temperature = temprature
         self.max_completion_tokens = max_completion_tokens
         self.top_p = top_p
         self.stop = stop
+        self.max_messages = max_messages
         self.messages = []
 
     def add_message(self, role, content):
-        """Add a message to the conversation history."""
+        """Add a message to the conversation history and maintain message limit."""
         self.messages.append({
             "role": role,
             "content": content
         })
+        
+        # Keep only the last max_messages messages
+        if len(self.messages) > self.max_messages * 2:  # *2 because each exchange has 2 messages (user + assistant)
+            self.messages = self.messages[-self.max_messages * 2:]
     
     def get_completion(self, content=None):
         """Get completion from Groq API using conversation history."""
@@ -51,7 +56,7 @@ class GroqApiClass:
 
 if __name__ == "__main__":
     # Initialize GroqApi with default settings
-    groq = GroqApi()
+    groq = GroqApiClass()
     
     print("Chat with Groq AI (type 'quit' to exit, 'clear' to reset conversation)")
     while True:

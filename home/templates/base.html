@@ -9,6 +9,7 @@
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
     <style>
     .navbar {
         position: sticky; top: 0px; z-index: 2;
@@ -63,7 +64,7 @@
         z-index: 9998;
         display: none;
         overflow: hidden;
-        {% comment %} transform: translateY(20px); {% endcomment %}
+        transform: translateY(20px);
         opacity: 0;
         transition: all 0.3s ease;
       }
@@ -163,6 +164,50 @@
         }
       }
     </style>
+    <style>
+    .navbar {
+        position: sticky;
+        top: 0px;
+        z-index: 2;
+        background: var(--gradient-bg) !important;
+        padding: 0.5rem 0;  /* Reduced from 1rem */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .navbar-brand {
+        color: white;
+        font-weight: 500;
+        font-size: 1.2rem;  /* Reduced from 1.3rem */
+    }
+
+    .navbar .btn {
+        transition: all 0.3s ease;
+        padding: 0.35rem 1rem;  /* Reduced from 0.5rem 1.2rem */
+    }
+
+    .navbar .btn-outline-light {
+        border-width: 2px;
+    }
+
+    .navbar .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .btn-light {
+        background: white;
+        color: var(--primary-purple);
+        border: none;
+        font-weight: 500;
+    }
+
+    .navbar .btn-light:hover {
+        background: var(--light-blue);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
     {% block head %}{% endblock head %}
 </head>
 
@@ -234,8 +279,8 @@
       position: fixed;
       bottom: 100px;
       right: 30px;
-      width: 350px;
-      height: 500px;
+      width: min(400px, 90vw);
+      height: min(600px, 70vh);
       background-color: white;
       border-radius: 15px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -245,6 +290,28 @@
       transform: translateY(20px);
       opacity: 0;
       transition: all 0.3s ease;
+    }
+
+    @media (max-height: 700px) {
+      .help-container {
+        height: 80vh;
+        bottom: 80px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .help-container {
+        width: 90vw;
+        right: 5vw;
+        left: 5vw;
+        bottom: 80px;
+        height: 70vh;
+      }
+
+      .help-button {
+        bottom: 20px;
+        right: 20px;
+      }
     }
 
     .help-content {
@@ -257,17 +324,17 @@
     .chat-area {
       flex: 1;
       padding: 15px;
-      padding-bottom: 8px; /* Reduced bottom padding */
+      padding-bottom: 0; /* Removed bottom padding */
       overflow-y: auto;
       background-color: #f8f9fa;
       display: flex;
       flex-direction: column;
-      max-height: calc(100% - 120px); /* Reduced from 130px */
+      max-height: calc(100% - 0px); /* Adjusted to remove gap */
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 55px; /* Reduced from 60px */
+      bottom: 55px; /* Adjusted to meet input area exactly */
     }
 
     .input-area {
@@ -377,6 +444,17 @@
         helpContainer.classList.remove('show');
       });
 
+      // Add function to toggle input state
+      function setInputState(disabled) {
+        messageInput.disabled = disabled;
+        sendButton.disabled = disabled;
+        if (disabled) {
+          messageInput.placeholder = "Please wait for a response...";
+        } else {
+          messageInput.placeholder = "Type your question here...";
+        }
+      }
+
       // Add loading spinner to chat
       function addLoadingSpinner() {
         const spinnerDiv = document.createElement('div');
@@ -407,7 +485,7 @@
         const messageDiv = document.createElement('div');
         messageDiv.className = isUser ? 'message user-message' : 'message assistant-message';
         
-        const messagePara = document.createElement('p');
+        const messagePara = document.createElement('md-block');
         messagePara.className = 'mb-0';
         messagePara.textContent = text;
         
@@ -421,6 +499,7 @@
       // Function to send message to backend
       async function sendMessageToBackend(message) {
         try {
+          setInputState(true); // Disable input while waiting
           addLoadingSpinner();
           const response = await fetch('/api/chatbot/chat/', {
             method: 'POST',
@@ -432,6 +511,7 @@
 
           const data = await response.json();
           removeLoadingSpinner();
+          setInputState(false); // Re-enable input after response
 
           if (response.ok) {
             addMessage(data.message, false);
@@ -441,6 +521,7 @@
           }
         } catch (error) {
           removeLoadingSpinner();
+          setInputState(false); // Re-enable input after error
           addMessage("Sorry, I encountered an error. Please try again.", false);
           console.error('Error:', error);
         }
@@ -467,6 +548,27 @@
           }
         }
       });
+
+      // Add window resize handler
+      function adjustHelpContainer() {
+        const windowHeight = window.innerHeight;
+        const helpContainer = document.getElementById('helpContainer');
+        const isMobile = window.innerWidth <= 576;
+        
+        if (windowHeight < 700) {
+          helpContainer.style.height = '80vh';
+          helpContainer.style.bottom = '80px';
+        } else {
+          helpContainer.style.height = 'min(600px, 70vh)';
+          helpContainer.style.bottom = isMobile ? '80px' : '100px';
+        }
+      }
+
+      // Add resize listener
+      window.addEventListener('resize', adjustHelpContainer);
+      
+      // Initial adjustment
+      adjustHelpContainer();
     });
   </script>
     {% endblock chatboat %}    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
