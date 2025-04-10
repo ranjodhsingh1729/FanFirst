@@ -9,19 +9,18 @@ from spotipy import Spotify, SpotifyOAuth
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 
-
-# :)
 import env
 from . import models
 
 
-# Configure Spotify OAuth
-sp_oauth = SpotifyOAuth(
-    scope=env.SPOTIFY_SCOPE,
-    client_id=env.SPOTIFY_CLIENT_ID,
-    client_secret=env.SPOTIFY_CLIENT_SECRET,
-    redirect_uri=env.SPOTIFY_CALLBACK_URI,
-)
+def get_spotify_oauth():
+    return SpotifyOAuth(
+        scope=env.SPOTIFY_SCOPE,
+        client_id=env.SPOTIFY_CLIENT_ID,
+        client_secret=env.SPOTIFY_CLIENT_SECRET,
+        redirect_uri=env.SPOTIFY_CALLBACK_URI,
+        cache_handler=None, 
+    )
 
 
 def index(request):
@@ -31,7 +30,7 @@ def index(request):
 
 
 def signin(request):
-    auth_url = sp_oauth.get_authorize_url()
+    auth_url = get_spotify_oauth().get_authorize_url()
     return redirect(auth_url)
 
 
@@ -39,7 +38,8 @@ def callback(request):
     code = request.GET.get("code")
     if code:
         try:
-            token_info = sp_oauth.get_access_token(code)
+            sp_oauth = get_spotify_oauth()
+            token_info = sp_oauth.get_access_token(code, check_cache=False)
             request.session["spotify_token"] = token_info["access_token"]
         except Exception as e:
             messages.error(request, f"sp_oauth.get_access_token failed with: {str(e)}")
@@ -56,6 +56,7 @@ def continue_with_spotify(request, token_info):
     sp = Spotify(auth=token_info['access_token'])
     profile = sp.current_user()
     spotify_id = profile['id']
+    spotify_name = profile['display_name']
 
     if request.user.is_authenticated:
         # User is logged in, check if they have a Spotify account
@@ -103,11 +104,13 @@ def continue_with_spotify(request, token_info):
         else:
             # Create new user and Spotify account
             username = f"spotify_{spotify_id}"
+            firstname = f"{spotify_name}"
             email = profile.get('email', '')
             
             # Create User
             user = User.objects.create_user(
                 username=username,
+                first_name=firstname,
                 email=email,
                 # Set unusable password since they'll log in with Spotify
                 password=None
