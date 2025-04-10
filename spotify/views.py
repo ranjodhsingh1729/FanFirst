@@ -1,10 +1,19 @@
+import time
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from spotipy import SpotifyOAuth
 from django.urls import reverse
+from django.contrib import messages
+from spotipy import Spotify, SpotifyOAuth
+
+import spotipy
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+
 
 # :)
 import env
+from . import models
 
 
 # Configure Spotify OAuth
@@ -18,8 +27,8 @@ sp_oauth = SpotifyOAuth(
 
 def index(request):
     if "spotify_token" in request.session:
-        return redirect(reverse("home"))
-    return redirect(reverse("spotify.signin"))
+        return redirect(reverse("home:index"))
+    return redirect(reverse("spotify:signin"))
 
 
 def signin(request):
@@ -28,11 +37,99 @@ def signin(request):
 
 
 def callback(request):
-    code = request.GET.get("code", None)
-    if code is not None:
-        access_token = sp_oauth.get_access_token(code)
-        request.session["spotify_token"] = access_token["access_token"]
+    code = request.GET.get("code")
+    if code:
+        try:
+            token_info = sp_oauth.get_access_token(code)
+            request.session["spotify_token"] = token_info["access_token"]
+        except Exception as e:
+            messages.error(request, f"sp_oauth.get_access_token failed with: {str(e)}")
     else:
-        pass
+        messages.error(request, "No authorization code received from Spotify")
 
-    return redirect(reverse("home"))
+    print(token_info)
+    continue_with_spotify(request, token_info)
+
+    return redirect(reverse("home:index"))
+
+
+def continue_with_spotify(request, token_info):
+    sp = spotipy.Spotify(auth=token_info['access_token'])
+    profile = sp.current_user()
+    spotify_id = profile['id']
+
+    if request.user.is_authenticated:
+        # User is logged in, check if they have a Spotify account
+        account = models.SpotifyAccount.objects.filter(user_id=request.user.id).first()
+        if account:
+            # Update existing account tokens
+            account.access_token = token_info['access_token']
+            account.refresh_token = token_info['refresh_token']
+            account.expires_in = token_info['expires_in']
+            account.expires_at = token_info['expires_at']
+            account.last_synced = int(time.time())
+            account.token_type = token_info['token_type']
+            account.scope = token_info['scope']
+            account.save()
+        else:
+            # Create new Spotify account for the user
+            account = models.SpotifyAccount(
+                user_id=request.user,
+                account_id=spotify_id,
+                expires_in=token_info['expires_in'],
+                expires_at=token_info['expires_at'],
+                last_synced=int(time.time()),
+                access_token=token_info['access_token'],
+                refresh_token=token_info['refresh_token'],
+                token_type=token_info['token_type'],
+                scope=token_info['scope']
+            )
+            account.save()
+    else:
+        # User is not logged in
+        # Check if a user exists with this Spotify account
+        account = models.SpotifyAccount.objects.filter(account_id=spotify_id).first()
+        if account:
+            # Update existing account tokens
+            account.access_token = token_info['access_token']
+            account.refresh_token = token_info['refresh_token']
+            account.expires_in = token_info['expires_in'] 
+            account.expires_at = token_info['expires_at']
+            account.last_synced = int(time.time())
+            account.token_type = token_info['token_type']
+            account.scope = token_info['scope']
+            account.save()
+            # Log in the existing user
+            login(request, account.user_id)
+        else:
+            # Create new user and Spotify account
+            username = f"spotify_{spotify_id}"
+            email = profile.get('email', '')
+            
+            # Create User
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                # Set unusable password since they'll log in with Spotify
+                password=None
+            )
+            user.set_unusable_password()
+            user.save()
+
+            # Create SpotifyAccount
+            account = models.SpotifyAccount(
+                user_id=user,
+                account_id=spotify_id,
+                expires_in=token_info['expires_in'],
+                expires_at=token_info['expires_at'],
+                last_synced=int(time.time()),
+                access_token=token_info['access_token'],
+                refresh_token=token_info['refresh_token'],
+                token_type=token_info['token_type'],
+                scope=token_info['scope']
+            )
+            account.save()
+
+            # Log in the new user
+            login(request, user)
+

@@ -16,6 +16,9 @@ def about(request):
     return render(request, "about.html", context)
 
 def signin(request):
+    if request.user.is_authenticated:
+        return redirect(reverse('home:index'))
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():

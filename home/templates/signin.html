@@ -20,7 +20,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            {% comment %} overflow: hidden; {% endcomment %}
         }
 
         .signin-container {
@@ -103,8 +103,23 @@
             width: 100%;
             padding: 0.75rem;
             font-weight: 600;
-            margin-top: 1rem;
+            margin: 0.5rem 0rem;
         }
+
+        .btn-secondary-custom {
+            text-style: none;
+            border-color: var(--primary-purple);
+            width: 100%;
+            padding: 0.75rem;
+            font-weight: 600;
+            margin: 0.5rem 0rem;
+        }
+
+        .btn-secondary-custom:hover {
+            background-color: var(--primary-purple);
+            border-color: var(--primary-purple);
+        }
+
 
         .btn-primary:hover,
         .btn-primary:focus {
@@ -177,8 +192,15 @@
             font-weight: 700;
             font-size: 3.5rem;
         }
-</style>
-{% endblock head %}
+        
+        .divider {
+            height: 3px;
+            width: 50px;
+            background: var(--gradient-bg);
+            margin: 1rem auto;
+        }
+    </style>
+    {% endblock head %}
 
 {% block body %}
     <div class="signin-container">
@@ -223,8 +245,12 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Sign In</button>
                 </form>
+                <div class="divider"></div>
+                <a href="{% url "spotify:signin" %}"><button type="submit" class="btn-secondary-custom">Continue With Spotify</button></a>
+                <a href=""><button type="submit" class="btn-secondary-custom">Continue With Apple Music</button></a>
+                <a href=""><button type="submit" class="btn-secondary-custom">Continue With Youtube Music</button></a>
                 <div class="no-account">
-                    Don't have an account? <a href="#">Sign Up</a>
+                    Don't have an account? <a href="{% url "home:signup" %}">Sign Up</a>
                 </div>
             </div>
         </div>

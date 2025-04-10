@@ -121,7 +121,7 @@
         <h1 class="display-4 fw-bold">Welcome to FanFirst</h1>
         <p class="lead fs-4">A concert ticketing platform built for true fans</p>
         <div class="mt-4">
-            <button class="btn btn-cta btn-lg">Get Started</button>
+            <a class="btn btn-cta btn-lg" href="{% url "home:signup" %}">Get Started</a>
         </div>
     </div>
 </header>
@@ -181,7 +181,7 @@
         <h2 class="mb-4 section-title">For Fans & Organizers</h2>
         <p class="lead">Whether you're a fan or an event organizer, FanFirst ensures fairness and personalization in
             ticket distribution.</p>
-        <button class="btn btn-primary mt-3">About</button>
+        <a class="btn btn-primary mt-3" href="{% url "home:about" %}">Learn More</a>
     </div>
 </section>
 
