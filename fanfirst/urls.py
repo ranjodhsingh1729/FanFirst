@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include(('home.urls', 'home'), namespace='home')),
     path('admin/', admin.site.urls),
+    path('', include(('home.urls', 'home'), namespace='home')),
+    path('api/chatbot/', include(('chatbot.urls', 'chatbot'), namespace='chatbot')),
     path('oauth/spotify/', include(('spotify.urls', 'spotify'), namespace='spotify')),
 ]

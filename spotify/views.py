@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.contrib import messages
 from spotipy import Spotify, SpotifyOAuth
 
-import spotipy
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 
@@ -54,7 +53,7 @@ def callback(request):
 
 
 def continue_with_spotify(request, token_info):
-    sp = spotipy.Spotify(auth=token_info['access_token'])
+    sp = Spotify(auth=token_info['access_token'])
     profile = sp.current_user()
     spotify_id = profile['id']
 
