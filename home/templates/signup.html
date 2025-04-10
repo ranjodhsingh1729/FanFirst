@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}SignUp{% endblock title %}
+
+{% block head %}
+<style>
+  :root {
+    --primary-blue: #4a90e2;
+    --primary-purple: #8e44ad;
+    --secondary-blue: #3a7bd5;
+    --secondary-purple: #7e349d;
+    --light-blue: #e3f2fd;
+    --dark-gray: #2a2a2a;
+    --gradient-bg: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .signup-container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .left-panel {
+    background: var(--gradient-bg);
+    color: white;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--dark-gray);
+    opacity: 0.2;
+    z-index: 1;
+  }
+
+  .left-panel-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-name {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
+  }
+
+  .brand-tagline {
+    font-size: 1.5rem;
+    font-weight: 300;
+    white-space: nowrap;
+    margin: 0 auto;
+  }
+
+  .right-panel {
+    background-color: white;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .form-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-purple);
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 0.25rem rgba(142, 68, 173, 0.25);
+  }
+
+  .btn-primary {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  .btn-primary:hover, .btn-primary:focus {
+    background-color: var(--secondary-purple);
+    border-color: var(--secondary-purple);
+  }
+
+  .form-label {
+    color: var(--dark-gray);
+    font-weight: 500;
+  }
+
+  .input-group-text {
+    background-color: var(--light-blue);
+    border-color: #ced4da;
+    color: var(--primary-blue);
+  }
+
+  .already-account {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--dark-gray);
+  }
+
+  .already-account a {
+    color: var(--primary-purple);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .already-account a:hover {
+    text-decoration: underline;
+  }
+
+  .musical-pattern {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/api/placeholder/400/400');
+    background-size: cover;
+    opacity: 0.05;
+    z-index: 0;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+
+  .logo-icon {
+    width: 50px;
+    height: 50px;
+    background: white;
+    color: var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 1.5rem;
+  }
+
+  .logo-text {
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  .name-row {
+    display: flex;
+    gap: 15px;
+  }
+
+  .name-row .mb-3 {
+    flex: 1;
+  }
+</style>
+{% endblock head %}
+
+{% block body %}
+  <div class="signup-container">
+    <!-- Left Panel with Branding -->
+    <div class="col-lg-6 left-panel">
+      <div class="musical-pattern"></div>
+      <div class="left-panel-content">
+        <div class="logo-area">
+          <div class="logo-text">FanFirst</div>
+        </div>
+        <p class="brand-tagline">"Fandom isn't seasonal, it's Eternal"</p>
+      </div>
+    </div>
+
+    <!-- Right Panel with Form -->
+    <div class="col-lg-6 right-panel">
+      <div class="form-container">
+        <h2 class="form-title">Create Your Account</h2>
+        {% for message in messages %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+        {% endfor %}
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="name-row">
+            <div class="mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" name="firstname" id="firstName" placeholder="First name" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Last Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" name="lastname" id="lastName" placeholder="Last name" required>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <input type="input" class="form-control" name="username" id="username" placeholder="Enter your username" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" class="form-control" name="password1" id="password" placeholder="Create a password" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+              <input type="password" class="form-control" name="password2" id="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+        <div class="already-account">
+          Already have an account? <a href="#">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

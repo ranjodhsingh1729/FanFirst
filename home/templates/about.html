@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About{% endblock title %}
+
+{% block head %}
+  <style>
+    :root {
+      --primary-blue: #4a90e2;
+      --primary-purple: #8e44ad;
+      --secondary-blue: #3a7bd5;
+      --secondary-purple: #7e349d;
+      --light-blue: #e3f2fd;
+      --dark-gray: #2a2a2a;
+      --gradient-bg: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .gradient-header {
+      background: var(--gradient-bg);
+      padding: 80px 0;
+      position: relative;
+    }
+
+    .section-title {
+      color: var(--primary-purple);
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--gradient-bg);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .feature-section {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-section:hover {
+      transform: translateY(-5px);
+    }
+
+    .bg-light-theme {
+      background-color: var(--light-blue);
+    }
+
+    .btn-primary {
+      background-color: var(--primary-purple);
+      border-color: var(--primary-purple);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: var(--secondary-purple);
+      border-color: var(--secondary-purple);
+    }
+
+    footer {
+      background: var(--dark-gray) !important;
+    }
+
+    .social-icon {
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+      color: var(--primary-blue) !important;
+      transform: scale(1.2);
+    }
+
+    .text-purple {
+      color: var(--primary-purple);
+    }
+
+    .divider {
+      height: 3px;
+      width: 50px;
+      background: var(--gradient-bg);
+      margin: 2rem auto;
+    }
+  </style>
+{% endblock head %}
+
+{% block body %}
+  <header class="gradient-header text-white text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold">About FanFirst</h1>
+      <p class="lead fs-4">A better way to connect true fans with the artists they love</p>
+    </div>
+  </header>
+
+  <section class="container my-5">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        <div class="text-center mb-5">
+          <p class="lead">
+            Concert tickets for top artists often sell out in minutes—leaving real fans behind. Our platform introduces a smarter, fairer way to distribute tickets by prioritizing fans based on their actual engagement with the artist.
+          </p>
+        </div>
+
+        <div class="feature-section p-4 mb-5">
+          <h2 class="text-purple mb-4"><i class="fas fa-ticket-alt me-2"></i> Why We Built This</h2>
+          <p>
+            Traditional ticketing systems favor speed and bots. This results in scalping, inflated prices, and an unfair experience for true fans. We believe dedicated listeners—the people who support artists the most—deserve better access to live shows.
+          </p>
+        </div>
+
+        <div class="feature-section p-4 mb-5">
+          <h2 class="text-purple mb-4"><i class="fas fa-rocket me-2"></i> How It Works</h2>
+          <div class="d-flex align-items-start mb-3">
+            <div class="feature-icon text-white">
+              <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <div>
+              <h5>Sign In as a Fan</h5>
+              <p>Link your streaming profiles to let us understand your music preferences.</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-start mb-3">
+            <div class="feature-icon text-white">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div>
+              <h5>Engage with Events</h5>
+              <p>Discover upcoming concerts and register your interest.</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-start mb-3">
+            <div class="feature-icon text-white">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div>
+              <h5>Get Ranked Fairly</h5>
+              <p>We use your listening history to calculate a fan engagement score and rank you fairly among others.</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-start">
+            <div class="feature-icon text-white">
+              <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div>
+              <h5>Priority Tickets</h5>
+              <p>A portion of tickets is reserved for high-ranking fans, so you get a better shot at attending.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-section p-4 mb-5">
+          <h2 class="text-purple mb-4"><i class="fas fa-tools me-2"></i> For Event Organizers</h2>
+          <div class="d-flex align-items-start mb-3">
+            <div class="feature-icon text-white">
+              <i class="fas fa-users-cog"></i>
+            </div>
+            <div>
+              <h5>Host Smarter Events</h5>
+              <p>Create events, set ticket allocation rules, and reward your most loyal fans.</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-start">
+            <div class="feature-icon text-white">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <div>
+              <h5>Insights that Matter</h5>
+              <p>Monitor fan engagement, ticket sales, and get real-time insights—all from one dashboard.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-light-theme py-5">
+    <div class="container text-center">
+      <h2 class="mb-4 section-title">Built for True Fans</h2>
+      <div class="divider"></div>
+      <p class="lead mb-4">
+        This platform is for the people who play the same song on repeat, who stream every album drop, and who actually care about the music—not the resale value of a ticket.
+      </p>
+      <button class="btn btn-primary btn-lg mt-3">Join FanFirst Today</button>
+    </div>
+  </section>
+
+  <footer class="text-white py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2025 FanFirst. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="text-white me-3 social-icon"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="text-white me-3 social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white me-3 social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white social-icon"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endblock body %}
