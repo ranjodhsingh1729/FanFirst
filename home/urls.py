@@ -10,4 +10,5 @@ urlpatterns = [
     path("signin/", views.signin, name="signin"),
     path("signout/", views.signout, name="signout"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("events/<int:event_id>/buy-tickets/", views.buy_tickets, name="buy_tickets"),
 ]

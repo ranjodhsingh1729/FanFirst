@@ -136,7 +136,9 @@
         <h1 class="display-4 fw-bold">Welcome to FanFirst</h1>
         <p class="lead fs-4">A concert ticketing platform built for true fans</p>
         <div class="mt-4">
+            {% if not request.user.is_authenticated %}
             <a class="btn btn-cta btn-lg" href="{% url "home:signup" %}">Get Started</a>
+            {% endif %}
             <a class="btn btn-outline-white btn-lg" href="{% url "home:events" %}">Upcoming Events</a>
         </div>
     </div>

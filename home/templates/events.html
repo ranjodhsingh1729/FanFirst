@@ -219,191 +219,37 @@
         </button>
         <div class="events-scroll-container" id="eventsContainer">
             <div class="events-row">
-                <!-- Event Card 1 -->
+                {% for event in events %}
                 <div class="event-card">
                     <div class="event-banner">
-                        <h3>Summer Night Concert</h3>
+                        <h3>{{ event.name }}</h3>
                     </div>
                     <div class="event-content">
-                        <div class="event-name">Summer Night Concert</div>
-                        <div class="event-artist">Taylor Swift</div>
+                        <div class="event-name">{{ event.name }}</div>
+                        <div class="event-artist">{{ event.artist }}</div>
 
                         <div class="event-details">
                             <div class="event-detail-item">
                                 <span class="event-detail-icon"><i class="far fa-calendar-alt"></i></span>
-                                <span>April 15, 2025 - 8:00 PM</span>
+                                <span>{{ event.date|date:"F j, Y - g:i A" }}</span>
                             </div>
                             <div class="event-detail-item">
                                 <span class="event-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                <span>Madison Square Garden, New York</span>
+                                <span>{{ event.location }}</span>
                             </div>
                         </div>
 
-                        <div class="tickets-container">
-                            <div class="tickets-text">50 tickets remaining</div>
+                        {% comment %} <div class="tickets-container">
+                            <div class="tickets-text">{{ event.tickets_remaining }} tickets remaining</div>
                             <div class="progress tickets-progress">
-                                <div class="progress-bar" role="progressbar" style="width: 75%"></div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ event.tickets_sold_percentage }}%"></div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
 
-                        <button class="btn btn-view-details">View Details</button>
+                        <a href="{% url 'home:buy_tickets' event.id %}" class="btn btn-view-details">Buy Tickets</a>
                     </div>
                 </div>
-
-                <!-- Event Card 2 -->
-                <div class="event-card">
-                    <div class="event-banner">
-                        <h3>Acoustic Evening</h3>
-                    </div>
-                    <div class="event-content">
-                        <div class="event-name">Acoustic Evening</div>
-                        <div class="event-artist">Ed Sheeran</div>
-
-                        <div class="event-details">
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="far fa-calendar-alt"></i></span>
-                                <span>April 22, 2025 - 7:30 PM</span>
-                            </div>
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                <span>The O2 Arena, London</span>
-                            </div>
-                        </div>
-
-                        <div class="tickets-container">
-                            <div class="tickets-text">120 tickets remaining</div>
-                            <div class="progress tickets-progress">
-                                <div class="progress-bar" role="progressbar" style="width: 60%"></div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-view-details">View Details</button>
-                    </div>
-                </div>
-
-                <!-- Event Card 3 -->
-                <div class="event-card">
-                    <div class="event-banner">
-                        <h3>World Tour Finale</h3>
-                    </div>
-                    <div class="event-content">
-                        <div class="event-name">World Tour Finale</div>
-                        <div class="event-artist">Beyoncé</div>
-
-                        <div class="event-details">
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="far fa-calendar-alt"></i></span>
-                                <span>May 1, 2025 - 9:00 PM</span>
-                            </div>
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                <span>Staples Center, Los Angeles</span>
-                            </div>
-                        </div>
-
-                        <div class="tickets-container">
-                            <div class="tickets-text">25 tickets remaining</div>
-                            <div class="progress tickets-progress">
-                                <div class="progress-bar" role="progressbar" style="width: 90%"></div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-view-details">View Details</button>
-                    </div>
-                </div>
-
-                <!-- Event Card 4 -->
-                <div class="event-card">
-                    <div class="event-banner">
-                        <h3>Jazz Festival</h3>
-                    </div>
-                    <div class="event-content">
-                        <div class="event-name">Jazz Festival</div>
-                        <div class="event-artist">John Legend</div>
-
-                        <div class="event-details">
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="far fa-calendar-alt"></i></span>
-                                <span>May 8, 2025 - 7:00 PM</span>
-                            </div>
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                <span>Blue Note, Chicago</span>
-                            </div>
-                        </div>
-
-                        <div class="tickets-container">
-                            <div class="tickets-text">80 tickets remaining</div>
-                            <div class="progress tickets-progress">
-                                <div class="progress-bar" role="progressbar" style="width: 47%"></div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-view-details">View Details</button>
-                    </div>
-                </div>
-
-                <!-- Event Card 5 -->
-                <div class="event-card">
-                    <div class="event-banner">
-                        <h3>Electronic Music Night</h3>
-                    </div>
-                    <div class="event-content">
-                        <div class="event-name">Electronic Music Night</div>
-                        <div class="event-artist">Calvin Harris</div>
-
-                        <div class="event-details">
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="far fa-calendar-alt"></i></span>
-                                <span>May 15, 2025 - 10:00 PM</span>
-                            </div>
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                <span>Ibiza Beach Club, Miami</span>
-                            </div>
-                        </div>
-
-                        <div class="tickets-container">
-                            <div class="tickets-text">100 tickets remaining</div>
-                            <div class="progress tickets-progress">
-                                <div class="progress-bar" role="progressbar" style="width: 75%"></div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-view-details">View Details</button>
-                    </div>
-                </div>
-
-                <!-- Event Card 6 -->
-                <div class="event-card">
-                    <div class="event-banner">
-                        <h3>Rock Revival</h3>
-                    </div>
-                    <div class="event-content">
-                        <div class="event-name">Rock Revival</div>
-                        <div class="event-artist">Foo Fighters</div>
-
-                        <div class="event-details">
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="far fa-calendar-alt"></i></span>
-                                <span>May 20, 2025 - 8:30 PM</span>
-                            </div>
-                            <div class="event-detail-item">
-                                <span class="event-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                <span>Red Rocks Amphitheatre, Denver</span>
-                            </div>
-                        </div>
-
-                        <div class="tickets-container">
-                            <div class="tickets-text">60 tickets remaining</div>
-                            <div class="progress tickets-progress">
-                                <div class="progress-bar" role="progressbar" style="width: 67%"></div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-view-details">View Details</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
