@@ -46,7 +46,7 @@ def callback(request):
     else:
         messages.error(request, "No authorization code received from Spotify")
 
-    print(token_info)
+    # print(token_info)
     continue_with_spotify(request, token_info)
 
     return redirect(reverse("home:events"))
