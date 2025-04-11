@@ -68,6 +68,9 @@ def dashboard(request):
         return redirect('home:signin')
 
     context = get_spotify_stats(request)
+    if not context.get("connected", False):
+        return redirect(reverse('home:index'))
+    
     return render(request, "dashboard.html", context)
 
 def buy_tickets(request, event_id):
