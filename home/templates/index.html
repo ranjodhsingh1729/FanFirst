@@ -111,6 +111,21 @@
     height: 3px;
     background: var(--gradient-bg);
     }
+
+    .btn-outline-white {
+        color: white;
+        border: 2px solid white;
+        background: transparent;
+        margin-left: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-white:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        transform: translateY(-2px);
+    }
 </style>
 {% endblock head %}
 
@@ -122,6 +137,7 @@
         <p class="lead fs-4">A concert ticketing platform built for true fans</p>
         <div class="mt-4">
             <a class="btn btn-cta btn-lg" href="{% url "home:signup" %}">Get Started</a>
+            <a class="btn btn-outline-white btn-lg" href="{% url "home:events" %}">Upcoming Events</a>
         </div>
     </div>
 </header>

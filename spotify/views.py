@@ -49,7 +49,7 @@ def callback(request):
     print(token_info)
     continue_with_spotify(request, token_info)
 
-    return redirect(reverse("home:dashboard"))
+    return redirect(reverse("home:events"))
 
 
 def continue_with_spotify(request, token_info):
