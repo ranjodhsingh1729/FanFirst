@@ -19,27 +19,6 @@
         background-color: #f8f9fa;
     }
 
-    .gradient-header {
-        background: var(--gradient-bg);
-        padding: 30px 0;
-        color: white;
-        text-align: center;
-        margin-bottom: 2rem;
-        border-radius: 0 0 15px 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .gradient-header h2 {
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-    }
-
-    .gradient-header p {
-        opacity: 0.9;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
     .dashboard-card {
         border-radius: 15px;
         overflow: hidden;
@@ -47,6 +26,7 @@
         background-color: white;
         margin-bottom: 1.5rem;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
     }
 
     .dashboard-card:hover {
@@ -78,6 +58,7 @@
 
     .profile-section {
         display: flex;
+        margin-bottom: 15px;
         align-items: center;
     }
 
@@ -375,18 +356,44 @@
         color: var(--primary-blue) !important;
         transform: scale(1.2);
     }
+
+    .sticky-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 9;
+        height: fit-content;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--light-blue);
+        border-top: 3px solid var(--primary-blue);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
 {% endblock head %}
 
 {% block body %}
-<!-- Gradient Header Section -->
-<div class="gradient-header">
-    <div class="container">
-        <h2>Welcome to Your Dashboard</h2>
-        <p>Track your music journey, view statistics, and manage your preferences</p>
-    </div>
-</div>
-
 <section class="container my-4">
     <div class="row">
         <div class="col-lg-4">
@@ -394,7 +401,6 @@
             <div class="dashboard-card">
                 <div class="dashboard-header">
                     <h5>My Profile</h5>
-                    <span class="badge rounded-pill">Premium</span>
                 </div>
                 <div class="dashboard-body">
                     <div class="profile-section">
@@ -403,7 +409,6 @@
                         </div>
                         <div class="profile-info">
                             <h4>{{ request.user.first_name }}</h4>
-                            <p>Fan since January 2023</p>
                             <div class="profile-badges">
                                 <span class="profile-badge"><i class="fas fa-award me-1"></i>Top Listener</span>
                                 <span class="profile-badge"><i class="fas fa-ticket-alt me-1"></i>Concert Pro</span>
@@ -434,19 +439,33 @@
                     <h5>Connected Accounts</h5>
                 </div>
                 <div class="dashboard-body">
+                    {% if connected %}
+                    <div class="account-item">
+                        <div class="account-icon spotify-icon">
+                            <i class="fab fa-spotify"></i>
+                        </div>
+                        <div class="account-info">
+                            <p>Spotify {% if spotify_profile %}({{ spotify_profile.display_name }}){% endif %}</p>
+                            <small>Connected</small>
+                        </div>
+                        <div class="status-icon status-connected">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    {% else %}
                     <div class="account-item">
                         <div class="account-icon spotify-icon">
                             <i class="fab fa-spotify"></i>
                         </div>
                         <div class="account-info">
                             <p>Spotify</p>
-                            <small>Connected as alex.t</small>
+                            <small>Not Connected</small>
                         </div>
-                        <div class="status-icon status-connected">
-                            <i class="fas fa-check-circle"></i>
+                        <div class="status-icon status-disconnected">
+                            <i class="fas fa-times-circle"></i>
                         </div>
                     </div>
-
+                    {% endif %}
                     <div class="account-item">
                         <div class="account-icon apple-icon">
                             <i class="fab fa-apple"></i>
@@ -466,63 +485,15 @@
                         </div>
                         <div class="account-info">
                             <p>YouTube Music</p>
-                            <small>Connected as alex.thompson</small>
+                            <small>Not connected</small>
                         </div>
-                        <div class="status-icon status-connected">
-                            <i class="fas fa-check-circle"></i>
+                        <div class="status-icon status-disconnected">
+                            <i class="fas fa-times-circle"></i>
                         </div>
                     </div>
 
                     <div class="mt-3">
                         <a href="#" class="btn btn-outline w-100"><i class="fas fa-plug me-2"></i>Manage Connections</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Favorite Genres Card -->
-            <div class="dashboard-card">
-                <div class="dashboard-header">
-                    <h5>Your Top Genres</h5>
-                </div>
-                <div class="dashboard-body">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>Pop</span>
-                            <span>45%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>Electronic</span>
-                            <span>30%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>Alternative</span>
-                            <span>15%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>R&B</span>
-                            <span>10%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -532,38 +503,32 @@
             <!-- User Stats Card -->
             <div class="dashboard-card">
                 <div class="dashboard-header">
-                    <h5>Your Music Stats</h5>
+                    <h5>Your Favorites</h5>
                     <small class="text-muted">Based on your connected platforms</small>
                 </div>
                 <div class="dashboard-body">
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-headphones"></i>
-                                </div>
-                                <div class="stat-number">178</div>
-                                <div class="stat-label">Hours Streamed</div>
-                                <div class="stat-footer">Last 30 days</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <div class="stat-card">
                                 <div class="stat-icon">
                                     <i class="fas fa-users"></i>
                                 </div>
-                                <div class="stat-number">42</div>
-                                <div class="stat-label">Artists Followed</div>
-                                <div class="stat-footer">Across platforms</div>
+                                <div class="stat-number">{{ followed_artists_len }}</div>
+                                <div class="stat-label">Followed Artists</div>
+                                <div class="stat-footer">On Spotify</div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <div class="stat-card">
                                 <div class="stat-icon">
-                                    <i class="fas fa-chart-line"></i>
+                                    <i class="fas fa-star"></i>
                                 </div>
-                                <div class="stat-number">Top 5%</div>
-                                <div class="stat-label">Aria Luna Fan Rank</div>
+                                <div class="stat-number" style="font-size: 1.5rem">
+                                    {% for artist in top_artists|slice:":3" %}
+                                        {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="stat-label">Top Artists</div>
                                 <div class="stat-footer">Based on streams</div>
                             </div>
                         </div>
@@ -571,137 +536,87 @@
                 </div>
             </div>
 
-            <!-- Recent Activity Card -->
+            <!-- Spotify Data Tabs -->
+            {% if connected %}
             <div class="dashboard-card">
                 <div class="dashboard-header">
-                    <h5>Recent Activity</h5>
+                    <h5>Your Spotify Data</h5>
                 </div>
                 <div class="dashboard-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item px-0 py-3 border-bottom">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-center" style="width: 45px;">
-                                    <i class="fas fa-ticket-alt fs-4" style="color: var(--primary-purple);"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">Purchased ticket for Aria Luna Concert</h6>
-                                    <small class="text-muted">2 days ago</small>
-                                </div>
-                            </div>
+                    <ul class="nav nav-tabs mb-3" id="spotifyTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="top-artists-tab" data-bs-toggle="tab" data-bs-target="#top-artists" type="button" role="tab">Top Artists</button>
                         </li>
-                        <li class="list-group-item px-0 py-3 border-bottom">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-center" style="width: 45px;">
-                                    <i class="fas fa-thumbs-up fs-4" style="color: var(--primary-blue);"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">Liked Aria Luna's new album</h6>
-                                    <small class="text-muted">5 days ago</small>
-                                </div>
-                            </div>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="followed-artists-tab" data-bs-toggle="tab" data-bs-target="#followed-artists" type="button" role="tab">Followed Artists</button>
                         </li>
-                        <li class="list-group-item px-0 py-3">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-center" style="width: 45px;">
-                                    <i class="fas fa-share fs-4" style="color: var(--primary-blue);"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">Shared Nova Sound Festival event</h6>
-                                    <small class="text-muted">1 week ago</small>
-                                </div>
-                            </div>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tracks-tab" data-bs-toggle="tab" data-bs-target="#tracks" type="button" role="tab">Top Tracks</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="recent-tab" data-bs-toggle="tab" data-bs-target="#recent" type="button" role="tab">Recently Played</button>
                         </li>
                     </ul>
-                </div>
-            </div>
-
-            <!-- Previous Concerts Card -->
-            <div class="dashboard-card">
-                <div class="dashboard-header">
-                    <h5>Previously Registered Concerts</h5>
-                </div>
-                <div class="dashboard-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="concert-card">
-                                <div class="ribbon"><span>VIP</span></div>
-                                <div class="concert-image" style="background-image: url('/api/placeholder/400/200')">
-                                    <div class="concert-image-overlay"></div>
-                                </div>
-                                <div class="concert-details">
-                                    <h6>Aria Luna - Moonlight Tour</h6>
-                                    <p><i class="fas fa-calendar-alt"></i> November 12, 2024</p>
-                                    <p><i class="fas fa-map-marker-alt"></i> Echo Arena</p>
-                                </div>
-                            </div>
+                    
+                    <div class="tab-content" id="spotifyTabContent">
+                        <div class="tab-pane fade show active" id="top-artists" role="tabpanel" style="max-height: 400px; overflow-y: auto;">
+                            <ul class="list-unstyled">
+                                {% for artist in top_artists %}
+                                <li class="d-flex align-items-center mb-2 p-2 rounded hover-bg-light">
+                                    <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                                    <div>
+                                        <strong>{{ artist.name }}</strong>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
 
-                        <div class="col-md-6 mb-3">
-                            <div class="concert-card">
-                                <div class="concert-image" style="background-image: url('/api/placeholder/400/200')">
-                                    <div class="concert-image-overlay"></div>
-                                </div>
-                                <div class="concert-details">
-                                    <h6>Nova Sound Festival</h6>
-                                    <p><i class="fas fa-calendar-alt"></i> July 23, 2024</p>
-                                    <p><i class="fas fa-map-marker-alt"></i> Riverside Park</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="concert-card">
-                                <div class="concert-image" style="background-image: url('/api/placeholder/400/200')">
-                                    <div class="concert-image-overlay"></div>
-                                </div>
-                                <div class="concert-details">
-                                    <h6>Pulse - Electronic Dreams</h6>
-                                    <p><i class="fas fa-calendar-alt"></i> March 5, 2024</p>
-                                    <p><i class="fas fa-map-marker-alt"></i> Lunar Club</p>
-                                </div>
-                            </div>
+                        <div class="tab-pane fade" id="followed-artists" role="tabpanel" style="max-height: 400px; overflow-y: auto;">
+                            <ul class="list-unstyled">
+                                {% for artist in followed_artists %}
+                                <li class="d-flex align-items-center mb-2 p-2 rounded hover-bg-light">
+                                    <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                                    <div>
+                                        <strong>{{ artist.name }}</strong>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                         
-                        <div class="col-md-6 mb-3">
-                            <div class="concert-card">
-                                <div class="concert-image" style="background-image: url('/api/placeholder/400/200')">
-                                    <div class="concert-image-overlay"></div>
-                                </div>
-                                <div class="concert-details">
-                                    <h6>Summer Beats Festival</h6>
-                                    <p><i class="fas fa-calendar-alt"></i> August 15, 2023</p>
-                                    <p><i class="fas fa-map-marker-alt"></i> Beach Pavilion</p>
-                                </div>
-                            </div>
+                        <div class="tab-pane fade" id="tracks" role="tabpanel" style="max-height: 400px; overflow-y: auto;">
+                            <ul class="list-unstyled">
+                                {% for track in top_tracks %}
+                                <li class="d-flex align-items-center mb-2 p-2 rounded hover-bg-light">
+                                    <img src="{{ track.album.images.0.url }}" alt="{{ track.name }}" class="rounded me-2" style="width: 50px; height: 50px;">
+                                    <div>
+                                        <strong>{{ track.name }}</strong>
+                                        <small class="d-block text-muted">{{ track.artists.0.name }} • {{ track.album.name }}</small>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
-
-                        <div class="col-12 text-center mt-2">
-                            <a href="#" class="btn btn-gradient"><i class="fas fa-history me-2"></i>View All Concert History</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Recommended Events -->
-            <div class="dashboard-card">
-                <div class="dashboard-header">
-                    <h5>Recommended For You</h5>
-                </div>
-                <div class="dashboard-body">
-                    <div class="alert" style="background-color: var(--light-blue); border-left: 4px solid var(--primary-blue); border-radius: 8px;">
-                        <div class="d-flex">
-                            <div class="me-3">
-                                <i class="fas fa-lightbulb fs-3" style="color: var(--primary-blue);"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-1">Aria Luna's New Album Release Party</h6>
-                                <p class="mb-0">Based on your listening habits, you might enjoy this upcoming event on May 15, 2025.</p>
-                                <a href="#" class="btn btn-sm btn-gradient mt-2">Get Tickets</a>
-                            </div>
+                        
+                        <div class="tab-pane fade" id="recent" role="tabpanel" style="max-height: 400px; overflow-y: auto;">
+                            <ul class="list-unstyled">
+                                {% for item in recent_tracks %}
+                                <li class="d-flex align-items-center mb-2 p-2 rounded hover-bg-light">
+                                    <img src="{{ item.track.album.images.0.url }}" alt="{{ item.track.name }}" class="rounded me-2" style="width: 50px; height: 50px;">
+                                    <div>
+                                        <strong>{{ item.track.name }}</strong>
+                                        <small class="d-block text-muted">{{ item.track.artists.0.name }} • {{ item.track.album.name }}</small>
+                                        <small class="d-block text-muted">Played: {{ item.played_at|date:"M d, Y H:i" }}</small>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -722,3 +637,5 @@
     </div>
 </footer>
 {% endblock body %}
+
+{% block scripts %}{% endblock scripts %}
